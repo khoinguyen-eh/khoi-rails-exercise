@@ -1,0 +1,219 @@
+require:
+  - rubocop-rails
+  - rubocop-performance
+  - rubocop-i18n-coverage
+
+inherit_from:
+  - https://raw.githubusercontent.com/Thinkei/Thinkei/master/.rubocop_default_v1.yml
+  - https://raw.githubusercontent.com/Thinkei/Thinkei/master/.rubocop-rails_default_v2.yml
+  - https://raw.githubusercontent.com/Thinkei/Thinkei/master/.rubocop-performance_default_v1.yml
+
+AllCops:
+  TargetRubyVersion: 2.7
+  TargetRailsVersion: 7.0
+  EnabledByDefault: false
+  DisabledByDefault: false
+
+Bundler/OrderedGems:
+  Enabled: true
+
+Rails:
+  Enabled: true
+
+Style/ExpandPathArguments:
+  Exclude:
+    - 'bin/*'
+
+Layout/TrailingWhitespace:
+  Enabled: true
+  Exclude:
+    - 'bin/*'
+
+Layout/EmptyLines:
+  Enabled: true
+  Exclude:
+    - 'bin/*'
+
+Layout/EmptyLineAfterMagicComment:
+  Exclude:
+    - 'bin/*'
+
+Layout/SpaceBeforeBlockBraces:
+  EnforcedStyle: space
+  EnforcedStyleForEmptyBraces: space
+
+#--------------------
+
+Layout/ParameterAlignment:
+  Enabled: false
+
+Layout/BlockEndNewline:
+  Enabled: false
+
+#no
+Style/GuardClause:
+  Enabled: false
+
+Layout/FirstHashElementIndentation:
+  Enabled: false
+
+Layout/SpaceBeforeFirstArg:
+  Enabled: false
+
+Naming/PredicateName:
+  Enabled: false # Doesn't understand `has_secure_token`, though there's promising discussion here: https://github.com/bbatsov/rubocop/issues/1741
+
+#no
+Style/Next:
+  Enabled: false
+
+Style/Alias:
+  Enabled: false
+
+Style/Documentation:
+  Enabled: false
+
+Layout/CaseIndentation:
+  Enabled: false
+
+#no
+Style/ParallelAssignment:
+  Enabled: false
+
+Metrics/ModuleLength:
+  Enabled: true
+  CountComments: false
+  Max: 300
+  Exclude:
+    - "**/*_spec.rb"
+
+Layout/LineLength:
+  Max: 120
+
+#no
+Style/StringLiterals:
+  Enabled: false
+  SupportedStyles:
+    - single_quotes
+    - double_quotes
+  ConsistentQuotesInMultiline: false
+
+Metrics/ParameterLists:
+  Max: 6
+
+Layout/DotPosition:
+  Enabled: false
+
+Metrics/AbcSize:
+  Enabled: false
+
+Metrics/MethodLength:
+  Enabled: false
+
+Metrics/ClassLength:
+  Enabled: false
+
+Naming/AccessorMethodName:
+  Enabled: false
+
+Layout/ArrayAlignment:
+  Enabled: false
+
+Layout/FirstArrayElementIndentation:
+  Enabled: false
+
+#no
+Style/AndOr:
+  Enabled: false
+
+#no
+Style/BlockDelimiters:
+  Enabled: false
+
+#no
+Style/ClassAndModuleChildren:
+  Enabled: false
+
+Layout/MultilineOperationIndentation:
+  Enabled: false
+
+Layout/MultilineMethodCallIndentation:
+  Enabled: false
+
+Style/RegexpLiteral:
+  Enabled: false
+
+Style/FrozenStringLiteralComment:
+  Severity: warning
+  Enabled: true
+  Exclude:
+    - "db/migrate/*.rb"
+
+Style/SignalException:
+  Enabled: false
+
+Style/MutableConstant:
+  Severity: warning
+  Enabled: true
+
+Style/ConditionalAssignment:
+  Enabled: false
+
+Lint/AmbiguousRegexpLiteral:
+  Description: >-
+    Checks for ambiguous regexp literals in the first argument of
+    a method invocation without parenthesis.
+  Enabled: false
+
+Lint/AmbiguousBlockAssociation:
+  Enabled: false
+
+Rails/HasAndBelongsToMany:
+  Enabled: false # At the moment MultiEditble is the problem, for has_many through we'd need to interpolate the join table for Configs and Docs
+
+Rails/InverseOf:
+  Enabled: false
+
+Rails/HasManyOrHasOneDependent:
+  Enabled: false
+
+Naming/HeredocDelimiterNaming:
+  Enabled: false
+
+Rails/SkipsModelValidations:
+  Enabled: true
+  ForbiddenMethods:
+    - decrement!
+    - decrement_counter
+    - increment!
+    - increment_counter
+    - toggle!
+    - touch
+    - update_all
+    - update_attribute
+    - update_columns
+    - update_counters
+  Exclude:
+    - "**/*_spec.rb"
+
+Rails/ActiveRecordAliases:
+  Enabled: false
+
+Style/FormatStringToken:
+  Enabled: false
+
+Style/NumericPredicate:
+  Enabled: false
+
+Naming/MemoizedInstanceVariableName:
+  Enabled: false
+
+Rails/UnknownEnv:
+  Environments:
+    - staging
+    - development
+    - test
+    - production
+
+Rails/HttpStatus:
+  Enabled: false
