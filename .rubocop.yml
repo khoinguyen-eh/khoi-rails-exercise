@@ -1,7 +1,7 @@
 require:
+  - rubocop-rspec
   - rubocop-rails
   - rubocop-performance
-  - rubocop-i18n-coverage
 
 inherit_from:
   - https://raw.githubusercontent.com/Thinkei/Thinkei/master/.rubocop_default_v1.yml
@@ -216,4 +216,7 @@ Rails/UnknownEnv:
     - production
 
 Rails/HttpStatus:
+  Enabled: false
+
+RSpec/ExampleLength:
   Enabled: false
