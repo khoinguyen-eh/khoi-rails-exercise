@@ -13,6 +13,8 @@ AllCops:
   TargetRailsVersion: 7.0
   EnabledByDefault: false
   DisabledByDefault: false
+  Exclude:
+    - 'bin/**/*'
 
 Bundler/OrderedGems:
   Enabled: true
