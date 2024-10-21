@@ -33,3 +33,5 @@
 
 # Remote rubocop cache
 .rubocop-https*
+
+.env
