@@ -13,6 +13,7 @@ module MainApp
 
       mount MainApp::V1::Books
       mount MainApp::V1::Authors
+      mount MainApp::V1::Users
 
       route :any, '*path' do
         error!(GoogleJsonResponse.render_error("Could not find endpoint"), 404)

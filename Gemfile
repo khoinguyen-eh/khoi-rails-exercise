@@ -45,6 +45,9 @@ gem 'grape_logging'
 gem 'grape-route-helpers'
 gem 'hashie', '~> 5.0.0'
 gem 'hashie-forbidden_attributes'
+gem 'hiredis'
+gem 'redis'
+gem 'redis-mutex', '4.0.1'
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
@@ -59,6 +62,9 @@ group :development, :test do
 end
 
 group :test do
+  gem 'fakeredis', git: 'https://github.com/guilleiguaran/fakeredis.git',
+                   ref: '95619078dbebe9be93b87d35513fd55411489e20',
+                   require: 'fakeredis/rspec'
   gem 'shoulda-matchers', '~> 5.3.0'
 end
 
