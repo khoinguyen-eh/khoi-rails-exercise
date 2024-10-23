@@ -231,3 +231,9 @@ RSpec/ImplicitSubject:
 
 Style/ClassEqualityComparison:
   Enabled: false
+
+RSpec/MultipleMemoizedHelpers:
+  Enabled: false
+
+RSpec/MultipleExpectations:
+  Enabled: false
