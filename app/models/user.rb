@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class User < ApplicationRecord
+  include Paginatable
+
   has_secure_password
   has_one :author, dependent: :destroy, inverse_of: :user
 
