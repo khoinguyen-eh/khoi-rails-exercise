@@ -228,3 +228,6 @@ RSpec/ImplicitExpect:
 
 RSpec/ImplicitSubject:
   Enabled: false
+
+Style/ClassEqualityComparison:
+  Enabled: false
