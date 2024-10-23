@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class Book < ApplicationRecord
+  include Paginatable
+  include Previewable
+
   has_and_belongs_to_many :authors, inverse_of: :books
 
   validates :isbn, presence: true, uniqueness: true
