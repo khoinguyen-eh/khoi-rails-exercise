@@ -20,8 +20,16 @@ class MainApp::V1::Books < ApplicationAPI
       optional :per_page, type: Integer, default: 10
     end
 
-    def find_book
+    params :mock_authenticate do
+      requires :user_id, type: Integer
+    end
+
+    def book
       Book.find(params[:id])
+    end
+
+    def creator
+      User.find(params[:user_id])
     end
 
     def render_book(book, include_authors: nil, paginate_option: {})
@@ -52,18 +60,22 @@ class MainApp::V1::Books < ApplicationAPI
 
       desc 'Get top rated books'
       get do
-        books = Book.all
-        books = books.where('rating >= ?', params[:min_rating]) if params[:min_rating].present?
-        books = books.order(rating: :desc).limit(params[:limit])
-        render_book(
-          books,
-          include_authors: params[:include_authors],
-          paginate_option: {
-            page: params[:page],
-            per_page: params[:per_page],
-            total_items: books.count
-          }
-        )
+        service = Books::GetService.new(params[:page], params[:per_page],
+                                        top_rated: { limit: params[:limit], min_rating: params[:min_rating] })
+        books = service.call
+
+        if service.success?
+          render_book(
+            books,
+            include_authors: params[:include_authors],
+            paginate_option: {
+              page: params[:page],
+              per_page: params[:per_page]
+            }
+          )
+        else
+          error!(GoogleJsonResponse.render_error(service.errors), 400)
+        end
       end
     end
 
@@ -74,15 +86,21 @@ class MainApp::V1::Books < ApplicationAPI
 
     desc 'Get all books'
     get do
-      books = Book.all.paginate(page: params[:page], per_page: params[:per_page])
-      render_book(
-        books,
-        include_authors: params[:include_authors],
-        paginate_option: {
-          page: params[:page],
-          per_page: params[:per_page]
-        }
-      )
+      service = Books::GetService.new(params[:page], params[:per_page])
+      books = service.call
+
+      if service.success?
+        render_book(
+          books,
+          include_authors: params[:include_authors],
+          paginate_option: {
+            page: params[:page],
+            per_page: params[:per_page]
+          }
+        )
+      else
+        error!(GoogleJsonResponse.render_error(service.errors), 400)
+      end
     end
 
     route_param :id do
@@ -92,24 +110,24 @@ class MainApp::V1::Books < ApplicationAPI
 
       desc 'Get a book'
       get do
-        book = find_book
         render_book(book, include_authors: params[:include_authors])
       end
     end
 
     params do
       use :book_content
+      use :mock_authenticate
     end
 
     desc 'Create a book'
     post do
-      parsed_params = declared(params)
-
-      service = Books::CreationService.new(parsed_params)
+      service = Books::CreationService.new(creator, declared(params))
       book = service.call
 
       if service.success?
         render_book(book, include_authors: book.authors.present? ? 'id_only' : nil)
+      elsif service.has_error_class?(ActiveRecord::RecordNotFound)
+        error!(GoogleJsonResponse.render_error(service.errors), 404)
       else
         error!(GoogleJsonResponse.render_error(service.errors), 400)
       end
@@ -117,34 +135,36 @@ class MainApp::V1::Books < ApplicationAPI
 
     params do
       use :book_content
+      use :mock_authenticate
     end
 
     desc 'Update a book'
     put ':id' do
-      book = find_book
-      parsed_params = declared(params)
-
-      service = Books::UpdateService.new(book, parsed_params)
+      service = Books::UpdateService.new(creator, params[:id], declared(params))
       book = service.call
 
       if service.success?
         render_book(book, include_authors: book.authors.present? ? 'id_only' : nil)
+      elsif service.has_error_class?(ActiveRecord::RecordNotFound)
+        error!(GoogleJsonResponse.render_error(service.errors), 404)
       else
         error!(GoogleJsonResponse.render_error(service.errors), 400)
       end
     end
 
+    params do
+      use :mock_authenticate
+    end
+
     desc 'Delete a book'
     delete ':id' do
-      book = find_book
-
-      service = Books::DeletionService.new(book)
+      service = Books::DeletionService.new(creator, params[:id])
       service.call
 
       if service.success?
         status 204
       else
-        error!(GoogleJsonResponse.render_error(service.errors), 400)
+        error!(GoogleJsonResponse.render_error(service.errors), 404)
       end
     end
   end

@@ -8,6 +8,7 @@ RSpec.describe Book, type: :model do
     let(:book) { create(:book) }
 
     it { should have_and_belong_to_many(:authors) }
+    it { should belong_to(:user) }
 
     it "can have many authors" do
       # Add an author to the book
