@@ -2,22 +2,28 @@
 
 module Authors
   class CreationService < ::ServiceBase
-    def initialize(author_params)
+    def initialize(creator, author_params)
       super
+      @creator = creator
       @author_params = author_params
     end
 
     def call
-      author = Author.new(author_params)
-      add_errors(author.errors) unless author.save
+      if creator.nil?
+        add_error('creator is required')
+        return
+      end
+
+      author = creator.authors.create(author_params)
+      add_error(author.errors) unless author.persisted?
 
       author
     rescue ActiveRecord::RecordNotFound => e
-      add_error(e.message)
+      add_error(e)
     end
 
     private
 
-    attr_reader :author_params
+    attr_reader :author_params, :creator
   end
 end

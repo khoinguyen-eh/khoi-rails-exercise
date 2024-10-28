@@ -2,23 +2,31 @@
 
 module Authors
   class UpdateService < ::ServiceBase
-    def initialize(author, update_params)
+    def initialize(creator, author_id, update_params)
       super
-      @author = author
+      @creator = creator
+      @author_id = author_id
       @update_params = update_params
     end
 
     def call
+      if creator.nil?
+        add_error('creator is required')
+        return
+      end
+
+      author = creator.authors.find(author_id)
+
       author.assign_attributes(update_params)
       add_errors(author.errors) unless author.save
 
       author
     rescue ActiveRecord::RecordNotFound => e
-      add_error(e.message)
+      add_error(e)
     end
 
     private
 
-    attr_reader :author, :update_params
+    attr_reader :update_params, :creator, :author_id
   end
 end
