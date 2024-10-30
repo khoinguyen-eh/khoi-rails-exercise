@@ -25,11 +25,11 @@ class MainApp::V1::Books < ApplicationAPI
     end
 
     def book
-      Book.find(params[:id])
+      @book ||= Book.find(params[:id])
     end
 
     def creator
-      User.find(params[:user_id])
+      @creator ||= User.find(params[:user_id])
     end
 
     def render_book(book, include_authors: nil, paginate_option: {})

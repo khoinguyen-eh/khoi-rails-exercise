@@ -35,6 +35,7 @@ RSpec.describe Books::DeletionService, type: :service do
       expect(service).not_to be_success
       expect(result).not_to be_destroyed
       expect(service.errors).to include('Deletion failed')
+      expect(result.reload.authors).to include(author)
     end
 
     it 'adds error if book is not found' do
