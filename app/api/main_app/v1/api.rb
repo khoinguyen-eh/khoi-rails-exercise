@@ -11,7 +11,6 @@ module MainApp
       format :json
       formatter :json, Grape::Formatter::ActiveModelSerializers
 
-      mount MainApp::V1::Books
       mount MainApp::V1::Authors
 
       route :any, '*path' do
