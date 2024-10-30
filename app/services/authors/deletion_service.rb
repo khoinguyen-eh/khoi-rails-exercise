@@ -20,6 +20,8 @@ module Authors
         handle_author_associations
 
         add_errors(author.errors) unless author.destroy
+
+        raise ActiveRecord::Rollback unless success?
       end
 
       author

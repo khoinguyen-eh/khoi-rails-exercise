@@ -23,11 +23,11 @@ class MainApp::V1::Authors < ApplicationAPI
     end
 
     def author
-      Author.find(params[:id])
+      @author ||= Author.find(params[:id])
     end
 
     def creator
-      User.find(params[:user_id])
+      @creator ||= User.find(params[:user_id])
     end
 
     def render_author(author, include_books: nil, paginate_option: {})

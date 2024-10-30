@@ -4,7 +4,8 @@ require 'rails_helper'
 
 RSpec.describe Authors::DeletionService, type: :service do
   let(:user) { create(:user) }
-  let(:author) { create(:author, user: user) }
+  let(:book) { create(:book) }
+  let(:author) { create(:author, user: user, books: [book]) }
   let(:another_author) { create(:author) }
 
   describe 'successful author deletion' do
@@ -34,6 +35,7 @@ RSpec.describe Authors::DeletionService, type: :service do
       expect(service).not_to be_success
       expect(result).not_to be_destroyed
       expect(service.errors).to include('Deletion failed')
+      expect(author.reload.books).to include(book)
     end
 
     it 'adds error if author is not found' do
