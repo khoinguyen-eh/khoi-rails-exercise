@@ -6,6 +6,7 @@ class User < ApplicationRecord
   has_secure_password
   has_many :authors, dependent: :destroy, inverse_of: :user
   has_many :books, dependent: :destroy, inverse_of: :user
+  has_many :agent_import_workflows, dependent: :destroy, inverse_of: :author, foreign_key: 'author_id'
 
   validates :email, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :first_name, presence: true
