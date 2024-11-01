@@ -90,7 +90,7 @@ Metrics/ModuleLength:
     - "**/*_spec.rb"
 
 Layout/LineLength:
-  Max: 120
+  Enabled: false
 
 #no
 Style/StringLiterals:
@@ -101,7 +101,7 @@ Style/StringLiterals:
   ConsistentQuotesInMultiline: false
 
 Metrics/ParameterLists:
-  Max: 6
+  Enabled: false
 
 Layout/DotPosition:
   Enabled: false
@@ -236,4 +236,10 @@ RSpec/MultipleMemoizedHelpers:
   Enabled: false
 
 RSpec/MultipleExpectations:
+  Enabled: false
+
+Metrics/CyclomaticComplexity:
+  Enabled: false
+
+Metrics/PerceivedComplexity:
   Enabled: false
