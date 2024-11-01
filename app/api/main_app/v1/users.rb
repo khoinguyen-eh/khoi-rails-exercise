@@ -7,9 +7,7 @@ class MainApp::V1::Users < ApplicationAPI
     @current_user_id = env['custom_data.current_user_id']
     @current_user_token = env['custom_data.current_user_token']
 
-    if request.path.match?(/\/api\/v1\/users\/\d+/) && %w[PUT DELETE].include?(request.request_method)
-      authenticate_user!
-    end
+    authenticate_user! if request.path.match?(/\/api\/v1\/users\/\d+/) && %w[PUT DELETE].include?(request.request_method)
   end
 
   helpers do
