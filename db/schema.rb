@@ -12,9 +12,51 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 20_241_028_040_945) do
+ActiveRecord::Schema[7.0].define(version: 20_241_031_110_315) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "agent_import_messages", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "agent_import_thread_run_id", null: false
+    t.string "role", null: false
+    t.text "content"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["agent_import_thread_run_id"], name: "index_agent_import_messages_on_agent_import_thread_run_id"
+  end
+
+  create_table "agent_import_thread_runs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "status", null: false
+    t.string "assistant_type", null: false
+    t.string "assistant_run_id", null: false
+    t.string "assistant_thread_id", null: false
+    t.bigint "object_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index %w[assistant_thread_id assistant_run_id], name: "index_thread_id_and_run_id", unique: true
+  end
+
+  create_table "agent_import_workflow_items", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "agent_import_workflow_id", null: false
+    t.string "status", null: false
+    t.uuid "book_thread_run_id"
+    t.uuid "author_thread_run_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["agent_import_workflow_id"], name: "index_agent_import_workflow_items_on_agent_import_workflow_id"
+    t.index ["author_thread_run_id"], name: "author_thread_run_id", unique: true
+    t.index ["book_thread_run_id"], name: "book_thread_run_id", unique: true
+  end
+
+  create_table "agent_import_workflows", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.bigint "author_id", null: false
+    t.string "status", null: false
+    t.string "book_prompt", null: false
+    t.string "author_prompt", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["author_id"], name: "index_agent_import_workflows_on_author_id"
+  end
 
   create_table "authors", force: :cascade do |t|
     t.bigint "user_id", null: false
