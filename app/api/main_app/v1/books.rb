@@ -167,5 +167,45 @@ class MainApp::V1::Books < ApplicationAPI
         error!(GoogleJsonResponse.render_error(service.errors), 404)
       end
     end
+
+    namespace '/:id/file' do
+      desc 'Upload digital copy of a book'
+      params do
+        requires :file, type: File
+      end
+
+      post 'upload' do
+        service = Books::UploadService.new(book, params[:file])
+        service.call
+
+        if service.success?
+          status 204
+        else
+          error!(GoogleJsonResponse.render_error(service.errors), 400)
+        end
+      end
+
+      get 'download' do
+        service = Grpc::GetFileService.new(book.file_id, download_url: true)
+        service.call
+
+        if service.success?
+          redirect service.data.download_url
+        else
+          error!(GoogleJsonResponse.render_error(service.errors), 400)
+        end
+      end
+
+      get 'preview' do
+        service = Grpc::GetFileService.new(book.file_id, remote_url: true)
+        service.call
+
+        if service.success?
+          redirect service.data.remote_url
+        else
+          error!(GoogleJsonResponse.render_error(service.errors), 400)
+        end
+      end
+    end
   end
 end
