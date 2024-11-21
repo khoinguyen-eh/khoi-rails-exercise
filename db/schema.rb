@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -12,15 +10,57 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 20_241_021_072_243) do
+ActiveRecord::Schema[7.0].define(version: 2024_11_20_095419) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "agent_import_messages", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "agent_import_thread_run_id", null: false
+    t.string "role", null: false
+    t.text "content"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["agent_import_thread_run_id"], name: "index_agent_import_messages_on_agent_import_thread_run_id"
+  end
+
+  create_table "agent_import_thread_runs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "status", null: false
+    t.string "assistant_type", null: false
+    t.string "assistant_run_id", null: false
+    t.string "assistant_thread_id", null: false
+    t.bigint "object_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["assistant_thread_id", "assistant_run_id"], name: "index_thread_id_and_run_id", unique: true
+  end
+
+  create_table "agent_import_workflow_items", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "agent_import_workflow_id", null: false
+    t.string "status", null: false
+    t.uuid "book_thread_run_id"
+    t.uuid "author_thread_run_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["agent_import_workflow_id"], name: "index_agent_import_workflow_items_on_agent_import_workflow_id"
+    t.index ["author_thread_run_id"], name: "author_thread_run_id", unique: true
+    t.index ["book_thread_run_id"], name: "book_thread_run_id", unique: true
+  end
+
+  create_table "agent_import_workflows", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.bigint "author_id", null: false
+    t.string "status", null: false
+    t.string "book_prompt", null: false
+    t.string "author_prompt", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["author_id"], name: "index_agent_import_workflows_on_author_id"
+  end
 
   create_table "authors", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.string "pen_name"
     t.string "bio"
-    t.boolean "is_verified"
+    t.boolean "is_verified", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_authors_on_user_id"
@@ -29,18 +69,21 @@ ActiveRecord::Schema[7.0].define(version: 20_241_021_072_243) do
   create_table "authors_books", id: false, force: :cascade do |t|
     t.bigint "author_id", null: false
     t.bigint "book_id", null: false
-    t.index %w[author_id book_id], name: "index_authors_books_on_author_id_and_book_id", unique: true
+    t.index ["author_id", "book_id"], name: "index_authors_books_on_author_id_and_book_id", unique: true
   end
 
   create_table "books", force: :cascade do |t|
     t.string "isbn", null: false
     t.string "name"
-    t.string "description"
-    t.decimal "rating", precision: 3, scale: 2
+    t.string "description", default: ""
+    t.decimal "rating", precision: 3, scale: 2, default: "0.0"
     t.datetime "published_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "user_id"
+    t.integer "file_id"
     t.index ["isbn"], name: "index_books_on_isbn", unique: true
+    t.index ["user_id"], name: "index_books_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -56,4 +99,5 @@ ActiveRecord::Schema[7.0].define(version: 20_241_021_072_243) do
   end
 
   add_foreign_key "authors", "users"
+  add_foreign_key "books", "users"
 end

@@ -38,19 +38,28 @@ gem "bootsnap", require: false
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
 # gem "rack-cors"
 
+gem 'aasm', '4.12.3'
 gem 'grape', '~> 1.6.2'
 gem 'grape-active_model_serializers', git: 'https://github.com/Thinkei/grape-active_model_serializers', branch: :master
 gem 'grape_has_scope'
 gem 'grape_logging'
 gem 'grape-route-helpers'
+gem 'grpc'
 gem 'hashie', '~> 5.0.0'
 gem 'hashie-forbidden_attributes'
+gem 'hiredis'
+gem 'protobuf'
+gem 'redis'
+gem 'redis-mutex', '4.0.1'
+gem "ruby-openai", "~> 7.0.1"
+gem 'sidekiq'
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[mri mingw x64_mingw]
   gem 'factory_bot_rails'
   gem 'faker'
+  gem 'grpc-tools'
   gem 'rspec-rails', '~> 6.1.0'
   gem 'rubocop', '~> 1.57.1', require: false
   gem 'rubocop-performance', '~> 1.19.1', require: false
@@ -59,6 +68,9 @@ group :development, :test do
 end
 
 group :test do
+  gem 'fakeredis', git: 'https://github.com/guilleiguaran/fakeredis.git',
+                   ref: '95619078dbebe9be93b87d35513fd55411489e20',
+                   require: 'fakeredis/rspec'
   gem 'shoulda-matchers', '~> 5.3.0'
 end
 

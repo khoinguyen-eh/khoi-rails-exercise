@@ -24,4 +24,9 @@ RSpec.describe Author, type: :model do
       expect(author.user).to eq(user)
     end
   end
+
+  describe 'validations' do
+    it { is_expected.to validate_presence_of(:pen_name) }
+    it { is_expected.to validate_presence_of(:bio) }
+  end
 end

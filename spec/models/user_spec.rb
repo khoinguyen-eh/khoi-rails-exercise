@@ -6,7 +6,7 @@ RSpec.describe User, type: :model do
   subject { create(:user) }
 
   describe 'associations' do
-    it { is_expected.to have_one(:author).inverse_of(:user) }
+    it { is_expected.to have_many(:author).inverse_of(:user) }
   end
 
   describe 'validations' do

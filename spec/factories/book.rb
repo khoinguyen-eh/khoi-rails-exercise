@@ -8,5 +8,7 @@ FactoryBot.define do
     rating { Faker::Number.between(from: 0.0, to: 5.0) }
     description { Faker::Lorem.paragraph }
     authors { [] }
+
+    association :user, factory: :user
   end
 end
