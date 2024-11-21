@@ -44,9 +44,11 @@ gem 'grape-active_model_serializers', git: 'https://github.com/Thinkei/grape-act
 gem 'grape_has_scope'
 gem 'grape_logging'
 gem 'grape-route-helpers'
+gem 'grpc'
 gem 'hashie', '~> 5.0.0'
 gem 'hashie-forbidden_attributes'
 gem 'hiredis'
+gem 'protobuf'
 gem 'redis'
 gem 'redis-mutex', '4.0.1'
 gem "ruby-openai", "~> 7.0.1"
@@ -57,6 +59,7 @@ group :development, :test do
   gem "debug", platforms: %i[mri mingw x64_mingw]
   gem 'factory_bot_rails'
   gem 'faker'
+  gem 'grpc-tools'
   gem 'rspec-rails', '~> 6.1.0'
   gem 'rubocop', '~> 1.57.1', require: false
   gem 'rubocop-performance', '~> 1.19.1', require: false

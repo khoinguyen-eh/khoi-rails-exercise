@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -12,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 20_241_031_110_315) do
+ActiveRecord::Schema[7.0].define(version: 2024_11_20_095419) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -33,7 +31,7 @@ ActiveRecord::Schema[7.0].define(version: 20_241_031_110_315) do
     t.bigint "object_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index %w[assistant_thread_id assistant_run_id], name: "index_thread_id_and_run_id", unique: true
+    t.index ["assistant_thread_id", "assistant_run_id"], name: "index_thread_id_and_run_id", unique: true
   end
 
   create_table "agent_import_workflow_items", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -62,7 +60,7 @@ ActiveRecord::Schema[7.0].define(version: 20_241_031_110_315) do
     t.bigint "user_id", null: false
     t.string "pen_name"
     t.string "bio"
-    t.boolean "is_verified"
+    t.boolean "is_verified", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_authors_on_user_id"
@@ -71,18 +69,19 @@ ActiveRecord::Schema[7.0].define(version: 20_241_031_110_315) do
   create_table "authors_books", id: false, force: :cascade do |t|
     t.bigint "author_id", null: false
     t.bigint "book_id", null: false
-    t.index %w[author_id book_id], name: "index_authors_books_on_author_id_and_book_id", unique: true
+    t.index ["author_id", "book_id"], name: "index_authors_books_on_author_id_and_book_id", unique: true
   end
 
   create_table "books", force: :cascade do |t|
     t.string "isbn", null: false
     t.string "name"
-    t.string "description"
-    t.decimal "rating", precision: 3, scale: 2
+    t.string "description", default: ""
+    t.decimal "rating", precision: 3, scale: 2, default: "0.0"
     t.datetime "published_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "user_id"
+    t.integer "file_id"
     t.index ["isbn"], name: "index_books_on_isbn", unique: true
     t.index ["user_id"], name: "index_books_on_user_id"
   end
