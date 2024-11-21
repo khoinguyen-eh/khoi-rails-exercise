@@ -18,7 +18,15 @@ GIT
 GEM
   remote: https://gem.fury.io/eh-devops/
   specs:
+    google-protobuf (3.25.5-arm64-darwin)
     google_json_response (0.4.0)
+    googleapis-common-protos-types (1.16.0)
+      google-protobuf (>= 3.18, < 5.a)
+    grpc (1.63.2-arm64-darwin)
+      google-protobuf (~> 3.25)
+      googleapis-common-protos-types (~> 1.0)
+    middleware (0.1.0)
+    thread_safe (0.3.6)
 
 GEM
   remote: https://rubygems.org/
@@ -134,13 +142,12 @@ GEM
       railties (>= 5.0.0)
     faker (3.4.2)
       i18n (>= 1.8.11, < 2)
-    faraday (2.8.1)
-      base64
-      faraday-net_http (>= 2.0, < 3.1)
-      ruby2_keywords (>= 0.0.4)
+    faraday (1.0.1)
+      multipart-post (>= 1.2, < 3)
     faraday-multipart (1.0.4)
       multipart-post (~> 2)
-    faraday-net_http (3.0.2)
+    faraday_middleware (1.2.0)
+      faraday (~> 1.0)
     globalid (1.2.1)
       activesupport (>= 6.1)
     grape (1.6.2)
@@ -160,6 +167,7 @@ GEM
       rack
     grape_on_rails_routes (0.3.2)
       rails (>= 3.1.1)
+    grpc-tools (1.67.0)
     hashie (5.0.0)
     hashie-forbidden_attributes (0.1.1)
       hashie (>= 3.0)
@@ -208,6 +216,11 @@ GEM
       ast (~> 2.4.1)
       racc
     pg (1.5.8)
+    protobuf (3.10.9)
+      activesupport (>= 3.2)
+      middleware
+      thor
+      thread_safe
     psych (5.1.2)
       stringio
     puma (5.6.9)
@@ -348,10 +361,13 @@ DEPENDENCIES
   grape_has_scope
   grape_logging
   grape_on_rails_routes
+  grpc
+  grpc-tools
   hashie (~> 5.0.0)
   hashie-forbidden_attributes
   hiredis
   pg
+  protobuf
   puma (~> 5.0)
   rails (~> 7.0.8, >= 7.0.8.4)
   redis

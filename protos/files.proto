@@ -1,0 +1,59 @@
+syntax = 'proto3';
+
+package Files;
+
+message GetFileRequest {
+  int64 id = 1;
+  bool remote_url = 2;
+  bool download_url = 3;
+}
+
+message GetFileResponse {
+  string remote_url = 1;
+  string download_url = 2;
+  string type = 3;
+  bool success = 4;
+  string error_message = 5;
+  string name = 6;
+}
+
+message DeleteFileRequest {
+  int64 id = 1;
+}
+
+message DeleteFileResponse {
+  bool success = 1;
+  string error_message = 2  ;
+}
+
+message UploadFileRequest {
+  bytes content = 1;
+}
+
+message UploadFileResponse {
+  int64 id = 1;
+  string name = 2;
+  string remote_url = 3;
+  string download_url = 4;
+  string type = 5;
+}
+
+service RpcServer {
+  rpc UploadFileClientStream(
+      stream UploadFileRequest
+      ) returns (
+      UploadFileResponse
+      );
+
+  rpc GetFile(
+      GetFileRequest
+      ) returns (
+      GetFileResponse
+      ) {}
+
+  rpc DeleteFile(
+      DeleteFileRequest
+      ) returns (
+      DeleteFileResponse
+      ) {}
+}
